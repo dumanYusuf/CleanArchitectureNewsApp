@@ -30,14 +30,17 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
+import com.example.newsapp.Screen
 import com.example.newsapp.presentation.news.NewsViewModel
+import com.google.gson.Gson
+import java.net.URLEncoder
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun NewsScreen(
-
+    navController: NavController,
     viewModel: NewsViewModel= hiltViewModel()
 ) {
     val context= LocalContext.current
@@ -52,11 +55,13 @@ fun NewsScreen(
                   items(viewModel.state.value.newsList){news->
                       Card(modifier = Modifier.fillMaxWidth()) {
                           Row (modifier = Modifier.fillMaxWidth().padding(5.dp).clickable {
-
+                              val charecterObject = Gson().toJson(news)
+                              val encodedMovieObject = URLEncoder.encode(charecterObject, "UTF-8")
+                              navController.navigate(Screen.DetailPage.route+"/$encodedMovieObject")
                           },
                               verticalAlignment = Alignment.CenterVertically){
                               Image(
-                                  modifier = Modifier.size(200.dp),
+                                  modifier = Modifier.size(150.dp),
                                   painter = rememberAsyncImagePainter(model =news.urlToImage , imageLoader = ImageLoader(context) ),
                                   contentDescription ="", contentScale = ContentScale.Crop )
 
